@@ -44,27 +44,42 @@ def entry():
         <title>番号表示</title>
         <style>
             body {
-                background-color: #F7E600;   /* ミニオンの黄色 */
+                background-color: #FFF4A8;   /* ふんわり黄色 */
                 text-align: center;
-                color: black;
-                font-family: Arial, sans-serif;
+                font-family: 'Arial', sans-serif;
+                padding-top: 80px;
             }
-            .number {
-                font-size: 200px;
-                font-weight: bold;
-                margin-top: 150px;
-                color: black;
-            }
+
             .title {
                 font-size: 40px;
-                margin-top: 20px;
-                color: black;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 30px;
+            }
+
+            .number-box {
+                background: white;
+                width: 300px;
+                margin: 0 auto;
+                padding: 40px;
+                border-radius: 30px;
+                box-shadow: 0px 0px 20px rgba(0,0,0,0.15);
+            }
+
+            .number {
+                font-size: 180px;
+                font-weight: bold;
+                color: #000;
+                line-height: 1;
             }
         </style>
     </head>
     <body>
         <div class="title">3年3組　怪盗グルーのミニオン大救出</div>
-        <div class="number">{{ num }}</div>
+
+        <div class="number-box">
+            <div class="number">{{ num }}</div>
+        </div>
     </body>
     </html>
     """
@@ -75,11 +90,57 @@ def entry():
 # ② 番号を進めるページ（/status）
 # -----------------------------
 @app.route("/status")
-def status():
+def status_page():
+    number = read_counter()
+    html = """
+    <html>
+    <head>
+        <title>スタッフ用ページ</title>
+        <style>
+            body {
+                background-color: #F7E600;
+                text-align: center;
+                color: black;
+                font-family: Arial, sans-serif;
+                padding-top: 50px;
+            }
+            .number {
+                font-size: 80px;
+                font-weight: bold;
+                margin-bottom: 40px;
+            }
+            .btn {
+                display: block;
+                width: 300px;
+                margin: 20px auto;
+                padding: 20px;
+                font-size: 30px;
+                font-weight: bold;
+                background: white;
+                border: 3px solid black;
+                border-radius: 10px;
+                color: black;
+                text-decoration: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="number">現在の番号：{{ num }}</div>
+
+        <a class="btn" href="/status/next">次の番号へ進む</a>
+        <a class="btn" href="/reset">番号をリセット</a>
+        <a class="btn" href="/list">番号一覧を見る</a>
+    </body>
+    </html>
+    """
+    return render_template_string(html, num=number)
+
+@app.route("/status/next")
+def status_next():
     number = read_counter() + 1
     write_counter(number)
     add_to_list(number)
-    return redirect("/entry")
+    return redirect("/status")
 
 # -----------------------------
 # ③ 番号リセット（/reset）

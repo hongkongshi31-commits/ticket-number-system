@@ -44,9 +44,7 @@ def entry():
         <title>番号表示</title>
         <style>
             body {
-                background-image: url('https://i.imgur.com/8QfQx7Z.jpeg');
-                background-size: cover;
-                background-position: center;
+                background-color: #F7E600;   /* ミニオンの黄色 */
                 text-align: center;
                 color: black;
                 font-family: Arial, sans-serif;
@@ -55,10 +53,12 @@ def entry():
                 font-size: 200px;
                 font-weight: bold;
                 margin-top: 150px;
+                color: black;
             }
             .title {
                 font-size: 40px;
                 margin-top: 20px;
+                color: black;
             }
         </style>
     </head>
@@ -69,6 +69,7 @@ def entry():
     </html>
     """
     return render_template_string(html, num=number)
+
 
 # -----------------------------
 # ② 番号を進めるページ（/status）

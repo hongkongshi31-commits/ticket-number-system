@@ -113,7 +113,7 @@ def list_page():
                 width: 300px;
                 margin: auto;
             }
-        </style>
+        </style>				
     </head>
     <body>
         <div class="box">

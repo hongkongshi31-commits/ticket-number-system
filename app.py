@@ -1,63 +1,86 @@
-from flask import Flask, render_template_string, redirect
-import os
+from flask import Flask, render_template_string, jsonify, redirect
+import sqlite3
 
 app = Flask(__name__)
 
-COUNTER_FILE = "counter.txt"
-LIST_FILE = "list.txt"
+# -------------------------
+# DB 接続
+# -------------------------
+def get_db():
+    conn = sqlite3.connect('queue.db')
+    conn.row_factory = sqlite3.Row
+    return conn
 
-# 初期化（ファイルが無ければ作る）
-if not os.path.exists(COUNTER_FILE):
-    with open(COUNTER_FILE, "w") as f:
-        f.write("0")
+# -------------------------
+# DB 初期化
+# -------------------------
+def init_db():
+    conn = get_db()
+    cur = conn.cursor()
 
-if not os.path.exists(LIST_FILE):
-    with open(LIST_FILE, "w") as f:
-        f.write("")
+    # 受付番号テーブル（QR読み込み時に追加される）
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS queue (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
 
-# 番号を読み書きする関数
-def read_counter():
-    with open(COUNTER_FILE, "r") as f:
-        return int(f.read().strip())
+    # 呼び出し番号テーブル（1行だけ使う）
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS current_number (
+            number INTEGER
+        )
+    ''')
 
-def write_counter(value):
-    with open(COUNTER_FILE, "w") as f:
-        f.write(str(value))
+    # 初期値がなければ 0 を入れる
+    cur.execute('SELECT COUNT(*) FROM current_number')
+    if cur.fetchone()[0] == 0:
+        cur.execute('INSERT INTO current_number (number) VALUES (0)')
 
-def add_to_list(value):
-    with open(LIST_FILE, "a") as f:
-        f.write(str(value) + "\n")
+    conn.commit()
+    conn.close()
 
-def read_list():
-    with open(LIST_FILE, "r") as f:
-        return f.read().splitlines()
+init_db()
 
-# -----------------------------
-# ① 番号表示ページ（/entry）
-# -----------------------------
+# -------------------------
+# QR読み込み → 番号発行
+# -------------------------
+@app.route('/get_number')
+def get_number():
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute('INSERT INTO queue DEFAULT VALUES')
+    conn.commit()
+
+    new_id = cur.lastrowid  # ← これが客の番号
+
+    conn.close()
+    return jsonify({"number": new_id})
+
+# -------------------------
+# 客側ページ（番号表示）
+# -------------------------
 @app.route("/entry")
 def entry():
-    number = read_counter()
     html = """
     <html>
     <head>
         <title>番号表示</title>
         <style>
             body {
-                background-color: #FFF4A8;   /* ふんわり黄色 */
+                background-color: #FFF4A8;
                 text-align: center;
-                font-family: 'Arial', sans-serif;
+                font-family: Arial, sans-serif;
                 padding-top: 80px;
             }
-
             .title {
                 font-size: 40px;
                 font-weight: bold;
-                color: #333;
                 margin-bottom: 30px;
             }
-
-            .number-box {
+            .box {
                 background: white;
                 width: 300px;
                 margin: 0 auto;
@@ -65,33 +88,85 @@ def entry():
                 border-radius: 30px;
                 box-shadow: 0px 0px 20px rgba(0,0,0,0.15);
             }
-
-            .number {
-                font-size: 180px;
+            .num {
+                font-size: 150px;
                 font-weight: bold;
-                color: #000;
-                line-height: 1;
             }
         </style>
     </head>
     <body>
         <div class="title">3年3組　怪盗グルーのミニオン大救出</div>
 
-        <div class="number-box">
-            <div class="number">{{ num }}</div>
+        <div class="box">
+            <div>あなたの番号</div>
+            <div class="num" id="myNumber"></div>
         </div>
+
+        <div class="box" style="margin-top:40px;">
+            <div>現在呼び出し中</div>
+            <div class="num" id="current"></div>
+        </div>
+
+        <div style="margin-top:30px; font-size:30px;">
+            あと <span id="diff"></span> 人であなたの番です
+        </div>
+
+        <script>
+            // QR読み込み時に番号を発行
+            fetch('/get_number')
+              .then(res => res.json())
+              .then(data => {
+                localStorage.setItem('myNumber', data.number);
+                document.getElementById('myNumber').innerText = data.number;
+              });
+
+            // 現在番号を定期的に取得
+            setInterval(() => {
+              fetch('/current')
+                .then(res => res.json())
+                .then(data => {
+                  document.getElementById('current').innerText = data.current;
+
+                  const my = localStorage.getItem('myNumber');
+                  if (my) {
+                    const diff = my - data.current;
+                    document.getElementById('diff').innerText = diff;
+                  }
+                });
+            }, 2000);
+        </script>
     </body>
     </html>
     """
-    return render_template_string(html, num=number)
+    return render_template_string(html)
 
+# -------------------------
+# 現在呼び出し番号（JSON）
+# -------------------------
+@app.route('/current')
+def current():
+    conn = get_db()
+    cur = conn.cursor()
 
-# -----------------------------
-# ② 番号を進めるページ（/status）
-# -----------------------------
+    cur.execute('SELECT number FROM current_number')
+    current = cur.fetchone()['number']
+
+    conn.close()
+    return jsonify({"current": current})
+
+# -------------------------
+# スタッフ用ページ
+# -------------------------
 @app.route("/status")
 def status_page():
-    number = read_counter()
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute('SELECT number FROM current_number')
+    number = cur.fetchone()['number']
+
+    conn.close()
+
     html = """
     <html>
     <head>
@@ -100,7 +175,6 @@ def status_page():
             body {
                 background-color: #F7E600;
                 text-align: center;
-                color: black;
                 font-family: Arial, sans-serif;
                 padding-top: 50px;
             }
@@ -119,8 +193,8 @@ def status_page():
                 background: white;
                 border: 3px solid black;
                 border-radius: 10px;
-                color: black;
                 text-decoration: none;
+                color: black;
             }
         </style>
     </head>
@@ -129,76 +203,44 @@ def status_page():
 
         <a class="btn" href="/status/next">次の番号へ進む</a>
         <a class="btn" href="/reset">番号をリセット</a>
-        <a class="btn" href="/list">番号一覧を見る</a>
     </body>
     </html>
     """
     return render_template_string(html, num=number)
 
+# -------------------------
+# 次へ進む
+# -------------------------
 @app.route("/status/next")
 def status_next():
-    number = read_counter() + 1
-    write_counter(number)
-    add_to_list(number)
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute('UPDATE current_number SET number = number + 1')
+    conn.commit()
+
+    conn.close()
     return redirect("/status")
 
-# -----------------------------
-# ③ 番号リセット（/reset）
-# -----------------------------
+# -------------------------
+# リセット
+# -------------------------
 @app.route("/reset")
 def reset():
-    write_counter(0)
-    with open(LIST_FILE, "w") as f:
-        f.write("")
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute('UPDATE current_number SET number = 0')
+    conn.commit()
+
+    cur.execute('DELETE FROM queue')
+    conn.commit()
+
+    conn.close()
     return "番号をリセットしました！"
 
-# -----------------------------
-# ④ 番号一覧（/list）
-# -----------------------------
-@app.route("/list")
-def list_page():
-    numbers = read_list()
-    html = """
-    <html>
-    <head>
-        <title>番号一覧</title>
-        <style>
-           body {
-    background-color: #F7E600;   /* ミニオンの黄色 */
-    text-align: center;
-    color: black;
-    font-family: Arial, sans-serif;
-}
-
-.number {
-    font-size: 200px;
-    font-weight: bold;
-    margin-top: 150px;
-    color: black;
-}
-
-.title {
-    font-size: 40px;
-    margin-top: 20px;
-    color: black;
-}
-
-        </style>
-    </head>
-    <body>
-        <div class="box">
-            <h2>番号一覧</h2>
-            {% for n in nums %}
-                <div>{{ n }}</div>
-            {% endfor %}
-        </div>
-    </body>
-    </html>
-    """
-    return render_template_string(html, nums=numbers)
-
-# -----------------------------
+# -------------------------
 # Render 用
-# -----------------------------
+# -------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)

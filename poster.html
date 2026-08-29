@@ -2,96 +2,60 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>ミニオン風QR受付ポスター</title>
+<title>受付QRコードポスター</title>
 
 <style>
-    /* A4印刷用余白調整 */
     @page {
         size: A4;
-        margin: 20mm;
+        margin: 0;
     }
 
     body {
-        background-color: #F7E600; /* ミニオン黄色 */
-        font-family: "Arial", sans-serif;
-        text-align: center;
-        color: #000;
         margin: 0;
-        padding: 0;
+        font-family: "Arial", sans-serif;
+        background: #fafafa;
+        text-align: center;
+        color: #333;
     }
 
     .container {
         width: 100%;
         max-width: 800px;
         margin: 0 auto;
-        padding-top: 10mm;
+        padding-top: 20mm;
+    }
+
+    /* オシャレな枠（ふち） */
+    .frame {
+        border: 8px solid #333;
+        border-radius: 25px;
+        padding: 20px;
+        width: 85%;
+        margin: 0 auto;
+        box-shadow: 0px 0px 25px rgba(0,0,0,0.15);
+        background: white;
     }
 
     .title {
-        font-size: 48px;
+        font-size: 42px;
         font-weight: bold;
-        margin-bottom: 5mm;
+        margin-bottom: 10px;
     }
 
     .subtitle {
-        font-size: 28px;
-        margin-bottom: 15mm;
-    }
-
-    /* ミニオンのゴーグル */
-    .minion-eyes {
-        margin: 0 auto 15mm auto;
-        width: 300px;
-        height: 120px;
-        background: #fff;
-        border: 10px solid #555;
-        border-radius: 60px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .eye {
-        width: 80px;
-        height: 80px;
-        background: #fff;
-        border: 8px solid #555;
-        border-radius: 50%;
-        margin: 0 20px;
-        position: relative;
-    }
-
-    .eye::after {
-        content: "";
-        width: 30px;
-        height: 30px;
-        background: #000;
-        border-radius: 50%;
-        position: absolute;
-        top: 25px;
-        left: 25px;
-    }
-
-    .bob {
-        font-size: 30px;
-        font-weight: bold;
-        margin-bottom: 10mm;
-    }
-
-    .instructions {
-        font-size: 22px;
-        line-height: 1.7;
-        margin-bottom: 15mm;
+        font-size: 26px;
+        margin-bottom: 20px;
     }
 
     /* QRコード枠 */
     .qr-box {
-        background: white;
-        padding: 15px;
+        background: #fff;
+        padding: 20px;
         border-radius: 20px;
-        width: 350px;
-        margin: 0 auto 15mm auto;
+        width: 330px;
+        margin: 20px auto;
         box-shadow: 0px 0px 20px rgba(0,0,0,0.2);
+        border: 4px dashed #333;
     }
 
     .qr-box img {
@@ -99,46 +63,34 @@
         height: 300px;
     }
 
+    .instructions {
+        font-size: 22px;
+        line-height: 1.7;
+        margin: 20px auto;
+        width: 80%;
+    }
 </style>
 </head>
 
 <body>
 <div class="container">
 
-    <div class="title">3年3組</div>
-    <div class="subtitle">怪盗グルーのミニオン大救出</div>
+    <div class="frame">
 
-    <!-- ミニオンの目（ゴーグル） -->
-    <div class="minion-eyes">
-        <div class="eye"></div>
-        <div class="eye"></div>
-    </div>
+        <div class="title">受付はこちら！</div>
+        <div class="subtitle">QRコードを読み込んで順番を確認できます</div>
 
-    <div class="bob">🟡 ミニオンのボブよりお知らせ！ 🟡</div>
+        <div class="qr-box">
+            <img src="https://ticket-number-system.onrender.com (1).png" alt="QRコード">
+        </div>
 
-    <div class="instructions">
-        バナナより大事なミッションがあるよ！<br>
-        このQRコードを読み込むと、<br>
-        <b>君だけの番号が自動で発行されるよ！</b><br><br>
+        <div class="instructions">
+            ・読み込むとあなたの番号が自動で発行されます<br>
+            ・現在呼び出し中の番号も確認できます<br>
+            ・あと何人で自分の番か分かります<br><br>
+            ※QRコードは1人1回だけ読み込んでください
+        </div>
 
-        画面には<br>
-        ・あなたの番号<br>
-        ・現在呼び出し中の番号<br>
-        ・あと何人で自分の番か<br>
-        が全部表示されるよ！<br><br>
-
-        ボブでも安心して待てるね！
-    </div>
-
-    <!-- QRコードを貼る場所 -->
-    <div class="qr-box">
-        <img src="ｈttps://ticket-number-system.onrender.com/entry" alt="QRコード">
-    </div>
-
-    <div class="instructions">
-        📲 QRコードは1人1回だけ読み込んでね！<br>
-        📱 スマホの画面は閉じないでね！<br>
-        🔔 呼ばれたらスタッフのところへ！
     </div>
 
 </div>

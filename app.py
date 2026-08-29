@@ -18,7 +18,7 @@ def init_db():
     conn = get_db()
     cur = conn.cursor()
 
-    # 受付番号テーブル（QR読み込み時に追加される）
+    # 受付番号テーブル
     cur.execute('''
         CREATE TABLE IF NOT EXISTS queue (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -26,7 +26,7 @@ def init_db():
         )
     ''')
 
-    # 呼び出し番号テーブル（1行だけ使う）
+    # 呼び出し番号テーブル（1行だけ）
     cur.execute('''
         CREATE TABLE IF NOT EXISTS current_number (
             number INTEGER
@@ -54,13 +54,13 @@ def get_number():
     cur.execute('INSERT INTO queue DEFAULT VALUES')
     conn.commit()
 
-    new_id = cur.lastrowid  # ← これが客の番号
+    new_id = cur.lastrowid
 
     conn.close()
     return jsonify({"number": new_id})
 
 # -------------------------
-# 客側ページ（番号表示）
+# 客側ページ
 # -------------------------
 @app.route("/entry")
 def entry():
@@ -112,29 +112,34 @@ def entry():
         </div>
 
         <script>
-            // QR読み込み時に番号を発行
+        let my = localStorage.getItem('myNumber');
+
+        if (!my) {
             fetch('/get_number')
               .then(res => res.json())
               .then(data => {
                 localStorage.setItem('myNumber', data.number);
                 document.getElementById('myNumber').innerText = data.number;
               });
+        } else {
+            document.getElementById('myNumber').innerText = my;
+        }
 
-            // 現在番号を定期的に取得
-            setInterval(() => {
-              fetch('/current')
-                .then(res => res.json())
-                .then(data => {
-                  document.getElementById('current').innerText = data.current;
+        setInterval(() => {
+          fetch('/current')
+            .then(res => res.json())
+            .then(data => {
+              document.getElementById('current').innerText = data.current;
 
-                  const my = localStorage.getItem('myNumber');
-                  if (my) {
-                    const diff = my - data.current;
-                    document.getElementById('diff').innerText = diff;
-                  }
-                });
-            }, 2000);
+              const my = localStorage.getItem('myNumber');
+              if (my) {
+                const diff = my - data.current;
+                document.getElementById('diff').innerText = diff;
+              }
+            });
+        }, 2000);
         </script>
+
     </body>
     </html>
     """
@@ -164,6 +169,9 @@ def status_page():
 
     cur.execute('SELECT number FROM current_number')
     number = cur.fetchone()['number']
+
+    cur.execute('SELECT COUNT(*) AS total FROM queue')
+    total = cur.fetchone()['total']
 
     conn.close()
 
@@ -200,13 +208,14 @@ def status_page():
     </head>
     <body>
         <div class="number">現在の番号：{{ num }}</div>
+        <div class="number">受付済み人数：{{ total }}人</div>
 
         <a class="btn" href="/status/next">次の番号へ進む</a>
         <a class="btn" href="/reset">番号をリセット</a>
     </body>
     </html>
     """
-    return render_template_string(html, num=number)
+    return render_template_string(html, num=number, total=total)
 
 # -------------------------
 # 次へ進む
@@ -237,10 +246,15 @@ def reset():
     conn.commit()
 
     conn.close()
-    return "番号をリセットしました！"
+    return """
+番号をリセットしました！
+<br><br>
+<a href="/status">スタッフ画面に戻る</a>
+"""
 
 # -------------------------
 # Render 用
 # -------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
+

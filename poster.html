@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ミニオン風QR受付ポスター</title>
+
+<style>
+    /* A4印刷用余白調整 */
+    @page {
+        size: A4;
+        margin: 20mm;
+    }
+
+    body {
+        background-color: #F7E600; /* ミニオン黄色 */
+        font-family: "Arial", sans-serif;
+        text-align: center;
+        color: #000;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        padding-top: 10mm;
+    }
+
+    .title {
+        font-size: 48px;
+        font-weight: bold;
+        margin-bottom: 5mm;
+    }
+
+    .subtitle {
+        font-size: 28px;
+        margin-bottom: 15mm;
+    }
+
+    /* ミニオンのゴーグル */
+    .minion-eyes {
+        margin: 0 auto 15mm auto;
+        width: 300px;
+        height: 120px;
+        background: #fff;
+        border: 10px solid #555;
+        border-radius: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .eye {
+        width: 80px;
+        height: 80px;
+        background: #fff;
+        border: 8px solid #555;
+        border-radius: 50%;
+        margin: 0 20px;
+        position: relative;
+    }
+
+    .eye::after {
+        content: "";
+        width: 30px;
+        height: 30px;
+        background: #000;
+        border-radius: 50%;
+        position: absolute;
+        top: 25px;
+        left: 25px;
+    }
+
+    .bob {
+        font-size: 30px;
+        font-weight: bold;
+        margin-bottom: 10mm;
+    }
+
+    .instructions {
+        font-size: 22px;
+        line-height: 1.7;
+        margin-bottom: 15mm;
+    }
+
+    /* QRコード枠 */
+    .qr-box {
+        background: white;
+        padding: 15px;
+        border-radius: 20px;
+        width: 350px;
+        margin: 0 auto 15mm auto;
+        box-shadow: 0px 0px 20px rgba(0,0,0,0.2);
+    }
+
+    .qr-box img {
+        width: 300px;
+        height: 300px;
+    }
+
+</style>
+</head>
+
+<body>
+<div class="container">
+
+    <div class="title">3年3組</div>
+    <div class="subtitle">怪盗グルーのミニオン大救出</div>
+
+    <!-- ミニオンの目（ゴーグル） -->
+    <div class="minion-eyes">
+        <div class="eye"></div>
+        <div class="eye"></div>
+    </div>
+
+    <div class="bob">🟡 ミニオンのボブよりお知らせ！ 🟡</div>
+
+    <div class="instructions">
+        バナナより大事なミッションがあるよ！<br>
+        このQRコードを読み込むと、<br>
+        <b>君だけの番号が自動で発行されるよ！</b><br><br>
+
+        画面には<br>
+        ・あなたの番号<br>
+        ・現在呼び出し中の番号<br>
+        ・あと何人で自分の番か<br>
+        が全部表示されるよ！<br><br>
+
+        ボブでも安心して待てるね！
+    </div>
+
+    <!-- QRコードを貼る場所 -->
+    <div class="qr-box">
+        <img src="ｈttps://ticket-number-system.onrender.com/entry" alt="QRコード">
+    </div>
+
+    <div class="instructions">
+        📲 QRコードは1人1回だけ読み込んでね！<br>
+        📱 スマホの画面は閉じないでね！<br>
+        🔔 呼ばれたらスタッフのところへ！
+    </div>
+
+</div>
+</body>
+</html>

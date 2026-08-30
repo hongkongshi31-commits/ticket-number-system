@@ -5,94 +5,54 @@
 <title>受付QRコードポスター</title>
 
 <style>
-    @page {
-        size: A4;
-        margin: 0;
-    }
+body {
+    background-color: #FFF4A8;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    padding: 40px 20px;
+}
 
-    body {
-        margin: 0;
-        font-family: "Arial", sans-serif;
-        background: #fafafa;
-        text-align: center;
-        color: #333;
-    }
+.title {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
 
-    .container {
-        width: 100%;
-        max-width: 800px;
-        margin: 0 auto;
-        padding-top: 20mm;
-    }
+.box {
+    background: white;
+    width: 90%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.15);
+}
 
-    /* オシャレな枠（ふち） */
-    .frame {
-        border: 8px solid #333;
-        border-radius: 25px;
-        padding: 20px;
-        width: 85%;
-        margin: 0 auto;
-        box-shadow: 0px 0px 25px rgba(0,0,0,0.15);
-        background: white;
-    }
-
-    .title {
-        font-size: 42px;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-
-    .subtitle {
-        font-size: 26px;
-        margin-bottom: 20px;
-    }
-
-    /* QRコード枠 */
-    .qr-box {
-        background: #fff;
-        padding: 20px;
-        border-radius: 20px;
-        width: 330px;
-        margin: 20px auto;
-        box-shadow: 0px 0px 20px rgba(0,0,0,0.2);
-        border: 4px dashed #333;
-    }
-
-    .qr-box img {
-        width: 300px;
-        height: 300px;
-    }
-
-    .instructions {
-        font-size: 22px;
-        line-height: 1.7;
-        margin: 20px auto;
-        width: 80%;
-    }
+.info {
+    margin-top: 20px;
+    font-size: 16px;
+    color: #444;
+    line-height: 1.6;
+}
 </style>
 </head>
 
 <body>
-<div class="container">
 
-    <div class="frame">
+<div class="title">3年3組<br>怪盗グルーのミニオン大救出</div>
 
-        <div class="title">受付はこちら！</div>
-        <div class="subtitle">QRコードを読み込んで順番を確認できます</div>
+<div class="box">
+    <img src="qr.png.png" alt="QRコード" style="width: 70%; margin-bottom: 20px;">
 
-        <div class="qr-box">
-            <img src="qr.png.png" alt="QRコード">
-        </div>
-
-        <div class="instructions">
-            ・読み込むとあなたの番号が自動で発行されます<br>
-            ・現在呼び出し中の番号も確認できます<br>
-            ・あと何人で自分の番か分かります<br><br>
-            ※QRコードは1人1回だけ読み込んでください
-        </div>
-
+    <div class="info">
+        📱 整理券番号の呼び出し状況はこちら！<br><br>
+        QRコードを読み取ると<br>
+        <strong>現在呼び出し中の番号</strong> が表示されます。<br><br>
+        お手元の紙の整理券の番号が<br>
+        <strong>表示されている番号以下</strong> になったら<br>
+        受付へお越しください。
     </div>
-
 </div>
+
 </body>
 </html>

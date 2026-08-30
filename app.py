@@ -101,39 +101,41 @@ def status_page():
         <title>スタッフ用ページ</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
-            body {
-                background-color: #F7E600;
-                text-align: center;
-                font-family: Arial, sans-serif;
-                padding-top: 30px;
-            }
-            .number {
-                font-size: 40px;
-                font-weight: bold;
-                margin-bottom: 20px;
-            }
-         .btn {
-          background: #ffffff;      /* 白背景 */
-          color: #000000;           /* 黒文字 */
-          border: 3px solid #000000;
-          padding: 20px;
-          font-size: 30px;
-          font-weight: bold;
-          text-decoration: none;
-          display: block;           /* ← これで縦に並ぶ */
-          width: 300px;
-          margin: 20px auto;
-          text-align: center;
-          border-radius: 10px;
-        }
+body {
+    background-color: #FFF4A8; /* 客ページと同じ薄い黄色 */
+    text-align: center;
+    font-family: Arial, sans-serif;
+    padding-top: 30px;
+}
 
+.number {
+    font-size: 40px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
 
+/* ボタンを完全に統一 */
+.btn {
+    background: #ffffff;
+    color: #000000;
+    border: 3px solid #000000;
+    padding: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    text-decoration: none;
+    display: block;
+    width: 320px;          /* ← 大きい方に合わせて統一 */
+    margin: 20px auto;
+    text-align: center;
+    border-radius: 10px;
+    white-space: nowrap;   /* ← 改行しない */
+}
 
-            .btn-danger {
-                background: #ffcdd2;
-                font-size: 16px;
-                padding: 10px;
-            }
+/* リセットボタンだけ色を変える（サイズは統一） */
+.btn-danger {
+    background: #ffcdd2;
+}
+
         </style>
     </head>
     <body>
@@ -141,7 +143,7 @@ def status_page():
 
         <form method="POST">
             <button class="btn" type="submit" name="next">次の番号へ進む (+1)</button>
-            <button class="btn" type="submit" name="back" style="font-size:16px; padding:10px;">1つ戻す (-1)</button>
+            <button class="btn" type="submit" name="back">1つ戻す (-1)</button>
             <hr style="margin: 40px auto; width: 80%;">
             <button class="btn btn-danger" type="submit" name="reset" onclick="return confirm('本当にリセットしますか？');">番号を 0 にリセット</button>
         </form>

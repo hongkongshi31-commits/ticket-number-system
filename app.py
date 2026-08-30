@@ -112,19 +112,21 @@ def status_page():
                 font-weight: bold;
                 margin-bottom: 20px;
             }
-            .btn {
-                display: block;
-                width: 80%;
-                max-width: 300px;
-                margin: 20px auto;
-                padding: 20px;
-                font-size: 24px;
-                font-weight: bold;
-                background: white;
-                border: 3px solid black;
-                border-radius: 10px;
-                cursor: pointer;
-            }
+           .btn {
+   　　　　　　 display: block;
+   　　　　　　 width: 300px;
+   　　　　　　 margin: 20px auto;
+  　　　　　　  padding: 20px;
+  　　　　　　  font-size: 30px;
+   　　　　　　 font-weight: bold;
+   　　　　　　 background: #ffffff;   /* 白背景 */
+  　　　　　　  color: #000000;        /* ← 文字を黒に固定 */
+   　　　　　　 border: 3px solid #000000;
+  　　　　　　  border-radius: 10px;
+ 　　　　　　   text-decoration: none;
+ 　　　　　　   text-align: center;
+　　　　　　}
+
             .btn-danger {
                 background: #ffcdd2;
                 font-size: 16px;

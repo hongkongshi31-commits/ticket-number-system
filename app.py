@@ -112,20 +112,21 @@ def status_page():
                 font-weight: bold;
                 margin-bottom: 20px;
             }
-           .btn {
- 　　　　　　   background: #ffffff;   /* 白背景 */
-　　　　　　    color: #000000;        /* ← 文字を黒にするだけでOK */
-  　　　　　　  border: 3px solid #000000;
- 　　　　　　   padding: 20px;
- 　　　　　　   font-size: 30px;
- 　　　　　　   font-weight: bold;
-　　　　　　    text-decoration: none;
- 　　　　　　   display: block;
-　　　　　　    width: 300px;
- 　　　　　　   margin: 20px auto;
-    　　　　　　text-align: center;
-  　　　　　　  border-radius: 10px;
-　　　　　　}
+         .btn {
+          background: #ffffff;      /* 白背景 */
+          color: #000000;           /* 黒文字 */
+          border: 3px solid #000000;
+          padding: 20px;
+          font-size: 30px;
+          font-weight: bold;
+          text-decoration: none;
+          display: block;           /* ← これで縦に並ぶ */
+          width: 300px;
+          margin: 20px auto;
+          text-align: center;
+          border-radius: 10px;
+        }
+
 
 
             .btn-danger {
